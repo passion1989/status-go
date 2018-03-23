@@ -10,11 +10,8 @@ import (
 	"runtime"
 	"strings"
 
-<<<<<<< HEAD
 	"github.com/ethereum/go-ethereum/log"
-=======
 	"github.com/ethereum/go-ethereum/p2p/discv5"
->>>>>>> Add topic register and parse options from command line
 	"github.com/status-im/status-go/cmd/statusd/debug"
 	"github.com/status-im/status-go/geth/api"
 	"github.com/status-im/status-go/geth/common"
@@ -87,6 +84,11 @@ func main() {
 
 	flag.Usage = printUsage
 	flag.Parse()
+
+	handler := log.StreamHandler(os.Stdout, log.TerminalFormat(true))
+	level, _ := log.LvlFromString(strings.ToLower(*logLevel))
+	filteredHandler := log.LvlFilterHandler(level, handler)
+	log.Root().SetHandler(filteredHandler)
 
 	config, err := makeNodeConfig()
 	if err != nil {
